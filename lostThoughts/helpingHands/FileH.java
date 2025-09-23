@@ -27,30 +27,31 @@ public class FileH {
     public static String[] fileToArray(String fileName) {
         File file = new File(fileName);
         Scanner fileScanner;
-
-        try {fileScanner = new Scanner(file);
-            
-        } catch (Exception e) {
-            fileScanner = new Scanner("File {" + fileName + "} not found");
-        }
-
         String[] returnArray = new String[0];
 
-        while (fileScanner.hasNextLine()) {
-            String curLineString = fileScanner.nextLine();
+        try {
+            fileScanner = new Scanner(file);
 
-            String[] newHolder = new String[returnArray.length + 1];
+            while (fileScanner.hasNextLine()) {
+                String curLineString = fileScanner.nextLine();
+    
+                String[] newHolder = new String[returnArray.length + 1];
+                    
+                for (int j = 0; j < returnArray.length; j++) {
+                    newHolder[j] = returnArray[j];
+                }
+    
+                newHolder[returnArray.length] = curLineString;
                 
-            for (int j = 0; j < returnArray.length; j++) {
-                newHolder[j] = returnArray[j];
+                returnArray = newHolder.clone();
             }
-
-            newHolder[returnArray.length] = curLineString;
+    
+            fileScanner.close();
             
-            returnArray = newHolder.clone();
+        } 
+        catch (Exception e) {
+            
         }
-
-        fileScanner.close();
 
         return returnArray;
     }
@@ -163,7 +164,7 @@ public class FileH {
         String encryptedString = "";
 
         for (int i = 0; i < encryptChars.length; i++) {
-            int charNum = encryptChars[i] * keyChars[i % keyChars.length];
+            int charNum = (encryptChars[i] * keyChars[i % keyChars.length] * 2);
             
             encryptedString += (char) charNum;
         }
@@ -180,7 +181,7 @@ public class FileH {
         String decryptedString = "";
 
         for (int i = 0; i < encryptChars.length; i++) {
-            int charNum = encryptChars[i] / keyChars[i % keyChars.length];
+            int charNum = (encryptChars[i] / keyChars[i % keyChars.length] / 2);
             
             decryptedString += (char) charNum;
         }
@@ -188,4 +189,14 @@ public class FileH {
         return decryptedString;
     }
 
+    public static void main(String[] args) {
+        String newString = "⛰〡㌰Ѐ㉐ⴘゐ㪀⇀◤ㅪ";
+        String decryptString = decryptString(newString, "You shouldn't be reading this");
+        String encryptString = encryptString(decryptString, "You shouldn't be reading this");
+        String finalString = decryptString(newString, "You shouldn't be reading this");
+        
+        PyJav.printl(decryptString);
+        PyJav.printl(encryptString);
+        PyJav.printl(finalString);
+    }
 }

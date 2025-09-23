@@ -2,20 +2,15 @@ package lostThoughts.crescent;
 import java.awt.*;
 import java.awt.geom.Path2D;
 
-import lostThoughts.helpingHands.PyJav;
-
 
 //DynamicShape 
     /**
      * Used to contain the info needed to generate a bezier shape
      * 
      */
-public class DynamicShapeCG {
+public class DynamicShapeCG extends BaseObjectCG {
     private double scale;
     private Color color;
-    private XYPointCG startPoint;
-    private XYPointCG offsetPoint;
-    private XYPointCG currentPoint;
     private XYPointCG[] pointList;
     private boolean[] curveList;
     private XYPointCG[][] bezierList;
@@ -33,9 +28,8 @@ public class DynamicShapeCG {
     public DynamicShapeCG(double shapeScale, Color shapeColor, XYPointCG shapeStartPoint, XYPointCG[] shapePointList, boolean[] shapeCurveList, XYPointCG[][] shapeBezierList) {
         scale = shapeScale;
         color = shapeColor;
-        startPoint = shapeStartPoint;
+        basePoint = shapeStartPoint;
         offsetPoint = new XYPointCG(0, 0);
-        currentPoint = new XYPointCG(0, 0);
         updateCurrentPoint();
         pointList = shapePointList;
         curveList = shapeCurveList;
@@ -53,9 +47,8 @@ public class DynamicShapeCG {
     public DynamicShapeCG(double shapeScale, Color shapeColor, XYPointCG shapeStartPoint, XYPointCG[] shapePointList) {
         scale = shapeScale;
         color = shapeColor;
-        startPoint = shapeStartPoint;
+        basePoint = shapeStartPoint;
         offsetPoint = new XYPointCG(0, 0);
-        currentPoint = new XYPointCG(0, 0);
         updateCurrentPoint();
         pointList = shapePointList;
 
@@ -69,9 +62,10 @@ public class DynamicShapeCG {
      * 
      * @return {@code Path2D.Double} = The path shape
      */
-    public Path2D.Double generateShape(Graphics2D g2d) {
+    @Override
+    public void generateObject(Graphics2D g2d) {
         
-        return bezierFromDynamic(g2d, this);
+        bezierFromDynamic(g2d, this);
     }
 
     /**
@@ -101,38 +95,6 @@ public class DynamicShapeCG {
      */
     public void setColor(Color newColor) {
         color = newColor;
-    }
-
-    /**
-     * Used to set the start point of the shape
-     * 
-     * @param newStartPoint = The start point of the shape to set
-     */
-    public void setStartPoint(XYPointCG newStartPoint) {
-        startPoint = newStartPoint;
-        updateCurrentPoint();
-    }
-
-    /**
-     * Used to set the offset point of the shape
-     * 
-     * @param newOffsetPoint = The offset point of the shape to set
-     */
-    public void setOffsetPoint(XYPointCG newOffsetPoint) {
-        offsetPoint = newOffsetPoint;
-        updateCurrentPoint();
-        
-    }
-
-    /**
-     * Updates the current point by adding the offset point to the start point
-     */
-    public void updateCurrentPoint() {
-        currentPoint.setX(startPoint.getX() + offsetPoint.getX());
-        currentPoint.setY(startPoint.getY() + offsetPoint.getY());
-        
-        //PyJav.printl("" + currentPoint);
-        
     }
 
     /**
@@ -178,30 +140,6 @@ public class DynamicShapeCG {
      */
     public Color getColor() {
         return color;
-    }
-
-    /**
-     * Used to get the start point of the shape
-     * 
-     */
-    public XYPointCG getStartPoint() {
-        return startPoint;
-    }
-
-    /**
-     * Used to get the offset point of the shape
-     * 
-     */
-    public XYPointCG getOffsetPoint() {
-        return offsetPoint;
-    }
-
-    /**
-     * Used to get the current point of the shape
-     * 
-     */
-    public XYPointCG getCurrentPoint() {
-        return currentPoint;
     }
 
     /**

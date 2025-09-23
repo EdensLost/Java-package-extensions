@@ -16,6 +16,10 @@ public class XYPointCG {
         point = new double[]{newX, newY};
     }
 
+    public XYPointCG clone() {
+        return new XYPointCG(getX(), getY());
+    }
+
     // To String
     @Override
     public String toString() {
@@ -99,8 +103,8 @@ public class XYPointCG {
      * @return {@code XYPointCG} = The attached XYPoint
      */
     public XYPointCG moveX(double deltaX) {
-        XYPointCG returnPoint = new XYPointCG(point[0] + deltaX, point[1]);
-        return returnPoint;
+        setX(getX() + deltaX);
+        return this;
     }
 
     //Move Y 
@@ -112,8 +116,14 @@ public class XYPointCG {
      * @return {@code XYPointCG} = The attached XYPoint
      */
     public XYPointCG moveY(double deltaY) {
-        XYPointCG returnPoint = new XYPointCG(point[0], point[1] + deltaY);
-        return returnPoint;
+        setY(getY() + deltaY);
+        return this;
+    }
+
+    public XYPointCG movePoint(XYPointCG deltaPoint) {
+        moveX(deltaPoint.getX());
+        moveY(deltaPoint.getY());
+        return this;
     }
 
     // Find center
@@ -227,7 +237,7 @@ public class XYPointCG {
     public static XYPointCG newInboundsPoint(XYPointCG maxPoint, double shapeWidth, double shapeHeight) {
         double halfWidth = shapeWidth / 2;
         double halfHeight = shapeHeight / 2;
-        return new XYPointCG(UtilH.randInt(maxPoint.getX() - halfWidth, halfWidth), UtilH.randInt(maxPoint.getY() - halfHeight, halfHeight));
+        return new XYPointCG(UtilH.newRand(maxPoint.getX() - halfWidth, halfWidth), UtilH.newRand(maxPoint.getY() - halfHeight, halfHeight));
     }
 
     //Generate new inbounds point
@@ -242,8 +252,8 @@ public class XYPointCG {
     public static XYPointCG newInboundsPoint(XYPointCG maxPoint, XYPointCG minPoint, double shapeWidth, double shapeHeight) {
         double halfWidth = shapeWidth / 2;
         double halfHeight = shapeHeight / 2;
-        return new XYPointCG(UtilH.randInt(maxPoint.getX() - halfWidth, minPoint.getX() + halfWidth), 
-                            UtilH.randInt(maxPoint.getY() - halfHeight, minPoint.getY() + halfHeight));
+        return new XYPointCG(UtilH.newRand(maxPoint.getX() - halfWidth, minPoint.getX() + halfWidth), 
+                            UtilH.newRand(maxPoint.getY() - halfHeight, minPoint.getY() + halfHeight));
     }
 //
 }   

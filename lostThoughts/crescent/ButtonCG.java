@@ -2,12 +2,13 @@ package lostThoughts.crescent;
 
 import java.awt.*;
 
-public class ButtonCG {
+import lostThoughts.crescent.TextCG.CenteringStyle;
 
-    private XYPointCG[] thisButtonDim;
+public class ButtonCG extends ClickableGroupObjectCG{
+
+    public XYPointCG thisButtonWidthHeight;
     private DynamicShapeCG thisButtonShape;
     private TextCG thisButtonText;
-    private XYPointCG thisCenterPoint;
 
     //Button
     /**
@@ -21,10 +22,16 @@ public class ButtonCG {
      * @param textScale = The scale of the button text
      * @param textColor = The color of the button text
      */
-    public ButtonCG(XYPointCG centerPoint, double width, double height, Color buttonColor, String buttonText, int textScale, Color textColor) {
-        thisCenterPoint = centerPoint;
+    public ButtonCG(XYPointCG centerPoint, double width, double height, Color buttonColor, String buttonText, int textScale, Color textColor, ActionInterfaceCG clickFunction, ActionInterfaceCG missFunction) {
+        clickAction = clickFunction;
+        noClickAction = missFunction;
+        basePoint = centerPoint;
+        offsetPoint = new XYPointCG(0, 0);
+        currentPoint = basePoint;
         thisButtonShape = genButtonShape(centerPoint, width, height, buttonColor);
         thisButtonText = genButtonText(buttonText, textScale, textColor);
+        objectGroup.add(thisButtonShape);
+        objectGroup.add(thisButtonText);
     }
 
     //Button
@@ -38,11 +45,18 @@ public class ButtonCG {
      * @param buttonText = The text the button displays
      * @param textFont = The Font of the button text
      * @param textColor = The color of the button text
+     * @param clickFunction = The function that is run when the button is clicked
      */
-    public ButtonCG(XYPointCG centerPoint, double width, double height, Color buttonColor, String buttonText, Font textFont, Color textColor) {
-        thisCenterPoint = centerPoint;
+    public ButtonCG(XYPointCG centerPoint, double width, double height, Color buttonColor, String buttonText, Font textFont, Color textColor, ActionInterfaceCG clickFunction, ActionInterfaceCG missFunction) {
+        clickAction = clickFunction;
+        noClickAction = missFunction;
+        basePoint = centerPoint;
+        offsetPoint = new XYPointCG(0, 0);
+        currentPoint = basePoint;
         thisButtonShape = genButtonShape(centerPoint, width, height, buttonColor);
         thisButtonText = genButtonText(buttonText, textFont, textColor);
+        objectGroup.add(thisButtonShape);
+        objectGroup.add(thisButtonText);
     }
 
 // TITLE [Gen button rect]
@@ -57,10 +71,9 @@ public class ButtonCG {
      * @return {@code DynamicShape} = The shape for the button
      */
     private DynamicShapeCG genButtonShape(XYPointCG centerPoint, double width, double height, Color buttonColor) {
-        XYPointCG topLeft = new XYPointCG(centerPoint.getX() - (width / 2), centerPoint.getY() - (height / 2));
-        XYPointCG bottomRight = new XYPointCG(centerPoint.getX() + (width / 2), centerPoint.getY() + (height / 2));
+        setClickZone(width, height);
 
-        thisButtonDim = new XYPointCG[] {topLeft, bottomRight};
+        thisButtonWidthHeight = new XYPointCG(width, height);
 
         XYPointCG[] pointsList = new XYPointCG[] {new XYPointCG( -(width / 2.0), -(height / 2.0)), 
                                                 new XYPointCG((width / 2.0), -(height / 2.0)), 
@@ -88,9 +101,9 @@ public class ButtonCG {
      * @return {@code DynamicShape} = The shape for the button
      */
     private TextCG genButtonText(String buttonText, int textScale, Color textColor) {
-        XYPointCG centerPoint = XYPointCG.findCenter(thisButtonDim[0], thisButtonDim[1]);
+        XYPointCG centerPoint = XYPointCG.findCenter(clickZone[0], clickZone[1]);
 
-        TextCG returnText = new TextCG(buttonText, textScale, textColor, centerPoint, true);
+        TextCG returnText = new TextCG(buttonText, textScale, textColor, centerPoint, CenteringStyle.CENTERED);
 
         return returnText;
     }
@@ -105,33 +118,25 @@ public class ButtonCG {
      * @return {@code DynamicShape} = The shape for the button
      */
     private TextCG genButtonText(String buttonText, Font textFont, Color textColor) {
-        XYPointCG centerPoint = XYPointCG.findCenter(thisButtonDim[0], thisButtonDim[1]);
+        XYPointCG centerPoint = XYPointCG.findCenter(clickZone[0], clickZone[1]);
 
-        TextCG returnText = new TextCG(buttonText, textFont, textColor, centerPoint, true);
+        TextCG returnText = new TextCG(buttonText, textFont, textColor, centerPoint, CenteringStyle.CENTERED);
 
         return returnText;
     }
 //
 
-// TITLE [Gen button]
-    //Gen full button
-    /**
-     * Generates the attached button when given the graphics needed
-     * 
-     * @param g2d = The Graphics2D to add the button to
-     * 
-     * @return {@code Button} = This button
-     */
-    public ButtonCG generateButton(Graphics2D g2d) {
-        
-        thisButtonShape.generateShape(g2d);
-        thisButtonText.generateText(g2d);
-
-        return this;
-    }
-//
-
 // TITLE [Sets]
+    // Set button function
+    /**
+     * Sets the function of the button
+     * 
+     * @param newDim = The new dimensions for the button
+     */
+    public void setButtonFunction(ActionInterfaceCG clickFunction) {
+        clickAction = clickFunction;
+    }
+
     // Set button shape
     /**
      * Sets the shape of the button
@@ -158,8 +163,9 @@ public class ButtonCG {
      * 
      * @return {@code XYPointCG} = The button center
      */
-    public void setCenter(XYPointCG newCenter) {
-        thisCenterPoint = newCenter;
+    public void setButtonCenter(XYPointCG newCenter) {
+        thisButtonShape = genButtonShape(newCenter, thisButtonWidthHeight.getX(), thisButtonWidthHeight.getY(), thisButtonShape.getColor());
+        thisButtonText = genButtonText(thisButtonText.getText(), thisButtonText.getFont(), thisButtonText.getColor());
     }
 //
 
@@ -171,7 +177,7 @@ public class ButtonCG {
      * @return {@code XYPointCG[]} = The button dimensions
      */
     public XYPointCG[] getDim() {
-        return thisButtonDim;
+        return clickZone;
     }
 
     // Get button shape
@@ -193,35 +199,5 @@ public class ButtonCG {
     public TextCG getButtonText() {
         return thisButtonText;
     }
-
-    // Get center point
-    /**
-     * Returns the center of the button
-     * 
-     * @return {@code XYPointCG} = The button center
-     */
-    public XYPointCG getCenter() {
-        return thisCenterPoint;
-    }
 //
-
-// [Methods]
-    //Point in button
-    /**
-     * Checks if the given point is inside the bounds of the button
-     * 
-     * @param compPoint = The XYPoint to compare
-     * 
-     * @return {@code boolean} = If the point is inside
-     */
-    public boolean isInButton(XYPointCG compPoint) {
-        
-        if (thisButtonDim[0].getX() <= compPoint.getX() && thisButtonDim[1].getX() >= compPoint.getX()) {
-            if (thisButtonDim[0].getY() <= compPoint.getY() && thisButtonDim[1].getY() >= compPoint.getY()) {
-                return true;
-            }
-        }
-
-        return false;
-    }
 }

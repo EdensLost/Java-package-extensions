@@ -39,15 +39,39 @@ public class UtilH {
     }
 //
 
-//Random Int
+//Randoms
+    /**
+     * Used to generate a random value
+     * 
+     * @param max The maximum value
+     * @return {@code int}
+     */
+    public static double newRand() {
+        double percentage = Math.random()/Math.nextDown(1.0);
+        double newDist = percentage;
+        return newDist + 0;
+    }
+    /**
+     * Used to generate a random value
+     * 
+     * @param max The maximum value
+     * @return {@code int}
+    */
+    public static double newRand(double max, double min) {
+        double dist = Math.abs(min) + Math.abs(max);
+        double percentage = Math.random()/Math.nextDown(1.0);
+        double newDist = percentage * dist;
+        return newDist + min;
+    }
+
     /**
      * Used to generate a random integer from 0 to max
      * 
      * @param max The maximum value
      * @return {@code int}
-     */
-    public static int randInt(double max) {
-        return (int) (Math.random() * (int) max);
+    */
+    public static int randInt(int max) {
+        return (int) Math.round(newRand(max, 0));
     }
     /**
      * Used to generate a random integer from min to max
@@ -56,22 +80,52 @@ public class UtilH {
      * @param max The maximum value
      * @param min The minimum value
      * @return {@code int}
+    
+    */
+    public static int randInt(int max, int min) {
+        return (int) Math.round(newRand(max, min));
+    }
+//
+
+// Random Arrays
+    /**
+     * Used to generate a randomized int array based on the given length and max and min values
+     * 
+     * @param length The length of the array
+     * @param max The maximum value found in the array
+     * @param min The minimum value found in the array
+     * @return {@code int[]}
+     
      */
-    public static int randInt(double max, double min) {
-        if (max >= min) {
+    public static int[] rArray(int length, int max, int min) {
+        int[] newArray = new int[length];
 
-            int shiftAmnt = (int) (max - min);
-
-            int randomNum = (int) (Math.random() * shiftAmnt);
-
-            randomNum = (int) (randomNum + min);
-
-            return randomNum;
+        for (int i = 0; i < length; i++) {
+            newArray[i] = UtilH.randInt(max, min);
         }
 
-        PyJav.printl("The max was less than the minimum");
-        return 0;
+        return newArray;
     }
+    
+    /**
+     * Used to generate a randomized double array based on the given length and max and min values
+     * 
+     * @param length The length of the array
+     * @param max The maximum value found in the array
+     * @param min The minimum value found in the array
+     * @return {@code double[]}
+     
+     */
+    public static double[] rArray(int length, double max, double min) {
+        double[] newArray = new double[length];
+
+        for (int i = 0; i < length; i++) {
+            newArray[i] = UtilH.newRand(max, min);
+        }
+
+        return newArray;
+    }
+
 //
 
 // Console command

@@ -14,7 +14,11 @@ public class ExtrasCG {
      * @return {@code Color} = The random color
      */
     public static Color randomColor() {
-        return new Color(UtilH.randInt(256), UtilH.randInt(256), UtilH.randInt(256));
+        try {
+            return new Color(UtilH.randInt(256), UtilH.randInt(256), UtilH.randInt(256));
+        } catch (Exception e) {
+            return Color.black;
+        }
     }
     //
 
