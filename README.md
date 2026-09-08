@@ -2,7 +2,7 @@
  A collection of different packages intended to make different things easier
 
  These packages were made utilizing Eclipse Adoptium JDK-21.0.1 and can be downloaded here (https://adoptium.net/download/)
- while some things may work fine, not using this or a newer version may cause issues
+ while some things may work fine, not using this or a different version may cause issues
 
  ## Helpers: (helpingHands)
   This is a collection of different utility methods to simplify different common problems
