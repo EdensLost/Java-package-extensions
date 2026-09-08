@@ -6,27 +6,45 @@ import java.awt.*;
 public class TextCG extends BaseObjectCG{
 
     
-    private String thisText;
-    private int thisScale;
-    private Color thisColor;
-    private Font thisFont;
+    public String thisText;
+    public int thisScale;
+    public Color thisColor;
+    public Font thisFont;
 
     public CenteringStyle centerStyle;
     public enum CenteringStyle {
-        NOT,
-        CENTERED,
-        VERTICAL
+        // LeftRight, UpDown
+        LT(00),
+        LEFT(01),
+        LB(02),
+        BOTTOM(12),
+        RB(22),
+        RIGHT(21),
+        RT(20),
+        TOP(10),
+        CENTER(11);
+
+        private final int spotNum;
+
+        // Constructor to initialize the dayNumber
+        CenteringStyle(int spotNum) {
+            this.spotNum = spotNum;
+        }
+
+        public int getNum() {
+            return spotNum;
+        }
     }
     
     //Centered Text
     /**
-     * Generates text at the given centerpoint
+     * Generates text at the given startpoint based on centering style
      * 
      * @param text = The text to display
      * @param scale = The scale of the text
      * @param color = The color of the text
-     * @param startPoint = The point the text draws based on {@code isCentered}
-     * @param isCentered = If the text is centered
+     * @param startPoint = The point the text draws based on {@code centering}
+     * @param centering = What centering the text should follow
      */
     public TextCG(String text, int scale, Color color, XYPointCG startPoint, CenteringStyle centering) {
         thisText = text;
@@ -41,13 +59,13 @@ public class TextCG extends BaseObjectCG{
 
     //Centered Text
     /**
-     * Generates text at the given centerpoint
+     * Generates text at the given startpoint based on centering style
      * 
      * @param text = The text to display
      * @param scale = The scale of the text
      * @param color = The color of the text
-     * @param startPoint = The point the text draws based on {@code isCentered}
-     * @param isCentered = If the text is centered
+     * @param startPoint = The point the text draws based on {@code centering}
+     * @param centering = What centering the text should follow
      */
     public TextCG(String text, Font curFont, Color color, XYPointCG startPoint, CenteringStyle centering) {
         thisText = text;
@@ -68,45 +86,43 @@ public class TextCG extends BaseObjectCG{
      */
     @Override
     public void generateObject(Graphics2D g2d) {
+        g2d.setFont(thisFont);
+        g2d.setColor(thisColor);
+
+        // Get the FontMetrics to measure the text
+        FontMetrics metrics = g2d.getFontMetrics();
+        int textWidth = metrics.stringWidth(thisText);
+        int textHeight = metrics.getHeight();
+        int textAscent = metrics.getAscent();
         
-        if (centerStyle == CenteringStyle.CENTERED) {
-            g2d.setFont(thisFont);
-            g2d.setColor(thisColor);
+        int genX = 0;
+        int genY = 0;
+        
+        int digitX = centerStyle.getNum() / 10;
+        int digitY = centerStyle.getNum() % 10;
 
-            // Get the FontMetrics to measure the text
-            FontMetrics metrics = g2d.getFontMetrics();
-            int textWidth = metrics.stringWidth(thisText);
-            int textHeight = metrics.getHeight();
-            int textAscent = metrics.getAscent();
-
-            // Calculate the position to center the text
-            int centeredX = (int) currentPoint.getX() - textWidth / 2;
-            int centeredY = (int) currentPoint.getY() + textAscent - textHeight / 2;
-
-            // Draws the text
-            g2d.drawString(thisText, centeredX, centeredY);
+        if (digitX == 0) {
+            genX = (int) currentPoint.getX();
         }
-        else if (centerStyle == CenteringStyle.NOT) {
-            g2d.setFont(thisFont);
-            g2d.setColor(thisColor);
-
-            g2d.drawString(thisText, (int) currentPoint.getX(), (int) currentPoint.getY());
+        else if (digitX == 1) {
+            genX = (int) currentPoint.getX() - textWidth / 2;
         }
-        else if (centerStyle == CenteringStyle.VERTICAL) {
-            g2d.setFont(thisFont);
-            g2d.setColor(thisColor);
-
-            // Get the FontMetrics to measure the text
-            FontMetrics metrics = g2d.getFontMetrics();
-            int textHeight = metrics.getHeight();
-            int textAscent = metrics.getAscent();
-
-            // Calculate the position to center the text
-            int centeredY = (int) currentPoint.getY() + textAscent - textHeight / 2;
-
-            // Draws the text
-            g2d.drawString(thisText, (int) currentPoint.getX(), centeredY);
+        else if (digitX == 2) {
+            genX = (int) currentPoint.getX() - textWidth;
         }
+
+        if (digitY == 0) {
+            genY = (int) currentPoint.getY();
+        }
+        else if (digitY == 1) {
+            genY = (int) currentPoint.getY() + textAscent - textHeight / 2;
+        }
+        else if (digitY == 2) {
+            genY = (int) currentPoint.getY() - textHeight;
+        }
+
+
+        g2d.drawString(thisText, genX, genY);
     }
 
 

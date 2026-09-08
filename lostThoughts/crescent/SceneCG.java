@@ -11,8 +11,6 @@ import java.util.Comparator;
 
 import javax.swing.JPanel;
 
-import lostThoughts.helpingHands.PyJav;
-
 public class SceneCG {
     /**Will run whatever is inside before drawing the scene*/
     public ActionInterfaceCG preSceneFunction;
@@ -33,6 +31,7 @@ public class SceneCG {
     public JPanel sceneWindow;
 
     public MouseListener sceneMouseL;
+    public XYPointCG lastClickPoint = null;
     public ArrayList<ClickableGroupObjectCG> mouseClickables = new ArrayList<>();
     public KeyListener sceneKeyL;
     public ArrayList<TextBoxCG> textBoxes = new ArrayList<>();
@@ -126,6 +125,7 @@ public class SceneCG {
 
                 // Update the click pos
                 XYPointCG clickPoint = new XYPointCG(x, y);
+                lastClickPoint = clickPoint.clone();
 
                 for (ClickableGroupObjectCG clickableObject : mouseClickables) {
                     if (clickableObject instanceof TextBoxCG) {

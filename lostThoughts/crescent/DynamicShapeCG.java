@@ -75,7 +75,7 @@ public class DynamicShapeCG extends BaseObjectCG {
      */
     public DynamicShapeCG clone() {
 
-        return new DynamicShapeCG(scale, color, currentPoint, pointList);
+        return new DynamicShapeCG(scale, color, currentPoint, pointList, curveList, bezierList);
     }
     
 // [Sets]
@@ -256,4 +256,17 @@ public class DynamicShapeCG extends BaseObjectCG {
         return path;
     }
 
+    @Override
+    public DynamicShapeCG move(double xDelta, double yDelta) {
+        XYPointCG newOffset = new XYPointCG(getOffsetPoint().getX() + xDelta, getOffsetPoint().getY() + yDelta);
+        setOffsetPoint(newOffset);
+        return this;
+    }
+
+    @Override
+    public DynamicShapeCG move(XYPointCG delatPoint) {
+        XYPointCG newOffset = new XYPointCG(getOffsetPoint().getX() + delatPoint.getX(), getOffsetPoint().getY() + delatPoint.getY());
+        setOffsetPoint(newOffset);
+        return this;
+    }
 }

@@ -72,12 +72,14 @@ public class GroupObjectCG extends BaseObjectCG{
 //
 
 // TITLE [Methods]
-    public void move(double xDelta, double yDelta) {
+    public GroupObjectCG move(double xDelta, double yDelta) {
         setOffsetPoint(new XYPointCG(getOffsetPoint().getX() + xDelta, getOffsetPoint().getY() + yDelta));
+        return this;
     }
 
-    public void move(XYPointCG delatPoint) {
+    public GroupObjectCG move(XYPointCG delatPoint) {
         setOffsetPoint(new XYPointCG(getOffsetPoint().getX() + delatPoint.getX(), getOffsetPoint().getY() + delatPoint.getY()));
+        return this;
     }
 //
 }

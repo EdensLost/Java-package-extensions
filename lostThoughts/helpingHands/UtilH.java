@@ -58,7 +58,7 @@ public class UtilH {
      * @return {@code int}
     */
     public static double newRand(double max, double min) {
-        double dist = Math.abs(min) + Math.abs(max);
+        double dist = max - min;
         double percentage = Math.random()/Math.nextDown(1.0);
         double newDist = percentage * dist;
         return newDist + min;

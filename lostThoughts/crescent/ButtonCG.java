@@ -9,6 +9,8 @@ public class ButtonCG extends ClickableGroupObjectCG{
     public XYPointCG thisButtonWidthHeight;
     private DynamicShapeCG thisButtonShape;
     private TextCG thisButtonText;
+    private Color enableColor;
+    private Color disableColor;
 
     //Button
     /**
@@ -28,6 +30,8 @@ public class ButtonCG extends ClickableGroupObjectCG{
         basePoint = centerPoint;
         offsetPoint = new XYPointCG(0, 0);
         currentPoint = basePoint;
+        enableColor = buttonColor;
+        disableColor = buttonColor.darker();
         thisButtonShape = genButtonShape(centerPoint, width, height, buttonColor);
         thisButtonText = genButtonText(buttonText, textScale, textColor);
         objectGroup.add(thisButtonShape);
@@ -53,6 +57,8 @@ public class ButtonCG extends ClickableGroupObjectCG{
         basePoint = centerPoint;
         offsetPoint = new XYPointCG(0, 0);
         currentPoint = basePoint;
+        enableColor = buttonColor;
+        disableColor = buttonColor.darker();
         thisButtonShape = genButtonShape(centerPoint, width, height, buttonColor);
         thisButtonText = genButtonText(buttonText, textFont, textColor);
         objectGroup.add(thisButtonShape);
@@ -103,7 +109,7 @@ public class ButtonCG extends ClickableGroupObjectCG{
     private TextCG genButtonText(String buttonText, int textScale, Color textColor) {
         XYPointCG centerPoint = XYPointCG.findCenter(clickZone[0], clickZone[1]);
 
-        TextCG returnText = new TextCG(buttonText, textScale, textColor, centerPoint, CenteringStyle.CENTERED);
+        TextCG returnText = new TextCG(buttonText, textScale, textColor, centerPoint, CenteringStyle.CENTER);
 
         return returnText;
     }
@@ -120,7 +126,7 @@ public class ButtonCG extends ClickableGroupObjectCG{
     private TextCG genButtonText(String buttonText, Font textFont, Color textColor) {
         XYPointCG centerPoint = XYPointCG.findCenter(clickZone[0], clickZone[1]);
 
-        TextCG returnText = new TextCG(buttonText, textFont, textColor, centerPoint, CenteringStyle.CENTERED);
+        TextCG returnText = new TextCG(buttonText, textFont, textColor, centerPoint, CenteringStyle.CENTER);
 
         return returnText;
     }
@@ -150,8 +156,6 @@ public class ButtonCG extends ClickableGroupObjectCG{
     // Set button text
     /**
      * Sets the text of the button
-     * 
-     * @return {@code TextCG} = The button text
      */
     public void setButtonText(String buttonText, Font textFont, Color textColor) {
         thisButtonText = genButtonText(buttonText, textFont, textColor);
@@ -160,12 +164,28 @@ public class ButtonCG extends ClickableGroupObjectCG{
     // Set center point
     /**
      * Sets the center of the button
-     * 
-     * @return {@code XYPointCG} = The button center
      */
     public void setButtonCenter(XYPointCG newCenter) {
         thisButtonShape = genButtonShape(newCenter, thisButtonWidthHeight.getX(), thisButtonWidthHeight.getY(), thisButtonShape.getColor());
         thisButtonText = genButtonText(thisButtonText.getText(), thisButtonText.getFont(), thisButtonText.getColor());
+    }
+
+    // Set button color
+    /**
+     * Sets the color of the button
+     */
+    public void setButtonColors(Color onColor, Color offColor) {
+        enableColor = onColor;
+        disableColor = offColor;
+
+        thisButtonShape.setColor(enabled ? enableColor : disableColor);
+    }
+
+    @Override
+    public void setEnabled(boolean isEnabled) {
+        enabled = isEnabled;
+
+        thisButtonShape.setColor(enabled ? enableColor : disableColor);
     }
 //
 

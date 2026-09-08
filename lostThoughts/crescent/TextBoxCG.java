@@ -19,6 +19,27 @@ public class TextBoxCG extends ClickableGroupObjectCG{
 
     public AllowKeyInterfaceCG baseAllowInterface = (KeyEvent e)-> { return true;};
     public AllowKeyInterfaceCG extraKeyRestrictions;
+    
+    /**
+     * Example of how to use:
+     * 
+     *@1 TextBoxCG.AllowKeyInterfaceCG loginRestrictions = (KeyEvent e) -> {
+     *@1    int keyVal = e.getKeyChar();
+     *@1    int[] restrictedKeys = {':', '*', '?', '<', '>', '/', '|', '\"'};
+     *
+     *@1    for (int code : restrictedKeys) {
+     *          if (keyVal == code) {
+     *             return false;
+     *         }
+     *      }
+     *
+     *@1    if (keyVal > 126) {
+     *        return false;
+     *      }
+     *
+     *@1    return true;
+     *}
+     */
     public interface AllowKeyInterfaceCG {
         boolean apply(KeyEvent e);
     }
@@ -84,7 +105,7 @@ public class TextBoxCG extends ClickableGroupObjectCG{
     private TextCG genText(String text, int textScale, Color textColor) {
         XYPointCG centerPoint = XYPointCG.findCenter(clickZone[0], clickZone[1]);
         centerPoint = new XYPointCG(clickZone[0].getX(), centerPoint.getY());
-        TextCG returnText = new TextCG(text, textScale, textColor, centerPoint, CenteringStyle.VERTICAL);
+        TextCG returnText = new TextCG(text, textScale, textColor, centerPoint, CenteringStyle.LEFT);
 
         return returnText;
     }
@@ -92,7 +113,7 @@ public class TextBoxCG extends ClickableGroupObjectCG{
     private TextCG genText(String text, Font textFont, Color textColor) {
         XYPointCG centerPoint = XYPointCG.findCenter(clickZone[0], clickZone[1]);
         centerPoint = new XYPointCG(clickZone[0].getX(), centerPoint.getY());
-        TextCG returnText = new TextCG(text, textFont, textColor, centerPoint, CenteringStyle.VERTICAL);
+        TextCG returnText = new TextCG(text, textFont, textColor, centerPoint, CenteringStyle.LEFT);
 
         return returnText;
     }

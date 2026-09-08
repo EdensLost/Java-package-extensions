@@ -34,19 +34,23 @@ public class ClickableObject extends BaseObjectCG {
     }
 
     @Override
-    public void move(double xDelta, double yDelta) {
+    public ClickableObject move(double xDelta, double yDelta) {
         setOffsetPoint(new XYPointCG(getOffsetPoint().getX() + xDelta, getOffsetPoint().getY() + yDelta));
         clickZone[0].setPoint(clickZone[0].getX() + xDelta, clickZone[0].getY() + yDelta);
         clickZone[1].setPoint(clickZone[1].getX() + xDelta, clickZone[1].getY() + yDelta);
+
+        return this;
     }
 
     @Override
-    public void move(XYPointCG deltaPoint) {
+    public ClickableObject move(XYPointCG deltaPoint) {
         double newX = deltaPoint.getX();
         double newY = deltaPoint.getY();
 
         setOffsetPoint(new XYPointCG(getOffsetPoint().getX() + newX, getOffsetPoint().getY() + newY));
         clickZone[0].setPoint(clickZone[0].getX() + newX, clickZone[0].getY() + newY);
         clickZone[1].setPoint(clickZone[1].getX() + newX, clickZone[1].getY() + newY);
+
+        return this;
     }
 }

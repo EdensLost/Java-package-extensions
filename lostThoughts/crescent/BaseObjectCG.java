@@ -53,14 +53,16 @@ public class BaseObjectCG {
 //
 
 // TITLE [Methods]
-    public void move(double xDelta, double yDelta) {
+    public BaseObjectCG move(double xDelta, double yDelta) {
         XYPointCG newOffset = new XYPointCG(getOffsetPoint().getX() + xDelta, getOffsetPoint().getY() + yDelta);
         setOffsetPoint(newOffset);
+        return this;
     }
 
-    public void move(XYPointCG delatPoint) {
+    public BaseObjectCG move(XYPointCG delatPoint) {
         XYPointCG newOffset = new XYPointCG(getOffsetPoint().getX() + delatPoint.getX(), getOffsetPoint().getY() + delatPoint.getY());
         setOffsetPoint(newOffset);
+        return this;
     }
 //
 }
